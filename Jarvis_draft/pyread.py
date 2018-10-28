@@ -9,7 +9,7 @@ playStateFlag = False
 ser = serial.Serial("/dev/cu.usbmoderm145401", 9600, timeout = 0.5)
 while True:
     data = ser.readline()
-    #Self-locking Push Switch for Play/Pause
+    #Self-locking Push Switch for Play/Pause 
     if data == 400 and buttonStateFlag == True: 
         playStateFlag = not playStateFlag
         if playStateFlag:
