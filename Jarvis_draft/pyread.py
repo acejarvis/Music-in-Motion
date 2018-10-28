@@ -6,7 +6,9 @@ import math
 buttonStateFlag = True
 playStateFlag = False
 #read data from arduino
-ser = serial.Serial("/dev/cu.usbmoderm145401", 9600, timeout = 0.5)
+ser = serial.Serial("/dev/cu.usbmoderm145401", 9600, timeout = 0.5) #serial ports setting on Mac
+#ser = serial.Serial("COM3", 9600, timeout = 0.5) #serial ports setting on Windows
+
 while True:
     data = ser.readline()
     #Self-locking Push Switch for Play/Pause 
@@ -31,4 +33,4 @@ while True:
         #play next
         elif data == 300:
             print("Play Next") #need api calling
-    applescript.Applescript("set volume output volume %d" % volume).run()
+    applescript.Applescript("set volume output volume %d" % volume).run() #System volume control on Mac
