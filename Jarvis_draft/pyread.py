@@ -6,8 +6,8 @@ import math
 buttonStateFlag = True
 playStateFlag = False
 #read data from arduino
-ser = serial.Serial("/dev/cu.usbmoderm145401", 9600, timeout = 0.5) #serial ports setting on Mac
-#ser = serial.Serial("COM3", 9600, timeout = 0.5) #serial ports setting on Windows
+#ser = serial.Serial("/dev/cu.usbmoderm145401", 9600, timeout = 0.5) #serial ports setting on Mac
+ser = serial.Serial("COM3", 9600, timeout = 0.5) #serial ports setting on Windows
 
 while True:
     data = ser.readline()
