@@ -1,5 +1,4 @@
-# Music-in-Motion
-UTRA Hacks 2018 
+# UTRA Hacks 2018 
 
 **Top:** RAW Sound Signal from Mic.
 
