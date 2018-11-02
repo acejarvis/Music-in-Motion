@@ -1,3 +1,4 @@
+# HELLA IMPORTSSSSS
 import matplotlib.pyplot as plt
 import numpy as np
 import pyaudio
@@ -8,19 +9,27 @@ from scipy.fftpack import fft
 import sys
 import time
 
+plt.style.use('dark_background')
+
+# OOP IN PYTHON , LET'S GO!
 
 class AudioStream(object):
+
+
     def __init__(self):
 
-        # stream constants
-        self.CHUNK = 1024 * 2
-        self.FORMAT = pyaudio.paInt16
-        self.CHANNELS = 1
-        self.RATE = 44100
-        self.pause = False
+        # The Mic. is used to Grab Soundwaves   
 
-        # stream object
-        self.p = pyaudio.PyAudio()
+        # "Hyperparameters"
+        self.CHUNK = 1024 * 2               # Soundwaves are split into 2048 "frames"
+        self.FORMAT = pyaudio.paInt16       # Each "frame" has 16-bit precision
+        self.CHANNELS = 1                   # Audio is obtained from 1 Channel (Mic) 
+        self.RATE = 44100                   # 44,100 FPS (Hz)
+        self.pause = False    
+
+        self.p = pyaudio.PyAudio()          # 'p' is our *main* audio-object
+  
+        # Open Microphone per "Hyperparameters"
         self.stream = self.p.open(
             format=self.FORMAT,
             channels=self.CHANNELS,
@@ -32,68 +41,70 @@ class AudioStream(object):
         self.init_plots()
         self.start_plot()
 
+
+        ''' 
+        Our Program plots 2 Functions:
+            (A) Raw Sound Signal                                > processed from Mic
+            (B) Frequency/Volume (Spectrum Analyzer)            > Fourier-Transform of (A)
+        '''
+
+    # SET UP THE 2 PLOTS
+
     def init_plots(self):
 
-        # x variables for plotting
-        x = np.arange(0, 2 * self.CHUNK, 2)
-        xf = np.linspace(0, self.RATE, self.CHUNK)
+        # Each Plot has a unique Domain (set of x's) 
+        domainSignal = np.arange(0, 2 * self.CHUNK, 2)
+        domainFft = np.linspace(0, self.RATE, self.CHUNK)
 
-        # create matplotlib figure and axes
+        # Our 2 Plots are Shown in Same Canvas
         self.fig, (ax1, ax2) = plt.subplots(2, figsize=(15, 7))
         self.fig.canvas.mpl_connect('button_press_event', self.onClick)
+        # Initialize the 2 Plots (no data yet)
+        self.lineSignal, = ax1.plot(domainSignal, np.random.rand(self.CHUNK), '-', lw=2)
+        self.lineFft, = ax2.semilogx(domainFft, np.random.rand(self.CHUNK), '-', lw=2)      # "semilogx" morphs x-axis (freq.) to log-scale
 
-        # create a line object with random data
-        self.line, = ax1.plot(x, np.random.rand(self.CHUNK), '-', lw=2)
-
-        # create semilogx line for spectrum
-        self.line_fft, = ax2.semilogx(
-            xf, np.random.rand(self.CHUNK), '-', lw=2)
-
-        # format waveform axes
-        ax1.set_title('AUDIO WAVEFORM')
-        ax1.set_xlabel('samples')
-        ax1.set_ylabel('volume')
-        ax1.set_ylim(0, 255)
-        ax1.set_xlim(0, 2 * self.CHUNK)
-        plt.setp(
-            ax1, yticks=[0, 128, 255],
-            xticks=[0, self.CHUNK, 2 * self.CHUNK],
-        )
-        plt.setp(ax2, yticks=[0, 1],)
-
-        # format spectrum axes
-        ax2.set_xlim(20, self.RATE / 2)
-
-        # show axes
+        # LABELL'n
+        ax1.set_title('SOUND SIGNAL')
+        ax1.set_xlabel('samples'); ax1.set_ylabel('volume')
+        ax1.set_ylim(0, 255); ax1.set_xlim(0, 2 * self.CHUNK)
+        ax2.set_title('SPECTRUM ANALYZER')
+        plt.setp(ax1, yticks=[0, 128, 255],xticks=[0, self.CHUNK, 2 * self.CHUNK])
+        plt.setp(ax2, yticks=[0, 1],); ax2.set_xlim(20, self.RATE / 2)
+        # show axes ??????????????????????????????????????????????????????
         thismanager = plt.get_current_fig_manager()
         thismanager.window.setGeometry(5, 120, 1910, 1070)
         plt.show(block=False)
 
+
+
+    # RELAY DATA TO THE 2 PLOTS
+
     def start_plot(self):
 
+        # Avg.FPS = #Frames/Total-Time
         print('stream started')
-        frame_count = 0
-        start_time = time.time()
+        frameCount = 0; startTime = time.time()
 
+        # Begin Reading Data
         while not self.pause:
-            data = self.stream.read(self.CHUNK)
-            data_int = struct.unpack(str(2 * self.CHUNK) + 'B', data)
-            data_np = np.array(data_int, dtype='b')[::2] + 128
 
-            self.line.set_ydata(data_np)
+            # Obtain a Raw Sound Signal from Mic. (Data = Binary)
+            dataBin = self.stream.read(self.CHUNK)
+            dataInt = struct.unpack(str(2 * self.CHUNK) + 'B', dataBin)
+            dataNp = np.array(dataInt, dtype='b')[::2] + 128
+            self.lineSignal.set_ydata(dataNp) # Our Plot can take Data as a Np Array
 
-            # compute FFT and update line
-            yf = fft(data_int)
-            self.line_fft.set_ydata(
-                np.abs(yf[0:self.CHUNK]) / (128 * self.CHUNK))
+            # Perform SIGNAL PROCESSING on Raw to get Freq. Spectrum
+            yf = fft(dataInt) # fft = fast fourier transform
+            self.lineFft.set_ydata(np.abs(yf[0:self.CHUNK]) / (128 * self.CHUNK))
 
-            # update figure canvas
+            # Draw the Obtained Data on our 2 Plots
             self.fig.canvas.draw()
             self.fig.canvas.flush_events()
-            frame_count += 1
+            frameCount += 1
 
         else:
-            self.fr = frame_count / (time.time() - start_time)
+            self.fr = frameCount / (time.time() - startTime) # Avg.FPS = #Frames/Total-Time
             print('average frame rate = {:.0f} FPS'.format(self.fr))
             self.exit_app()
 
@@ -105,5 +116,5 @@ class AudioStream(object):
         self.pause = True
 
 
-if __name__ == '__main__':
+if __name__ == '__main__': # INSTANTIATE BOIS1
     AudioStream()
