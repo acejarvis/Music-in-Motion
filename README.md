@@ -1,8 +1,8 @@
 # Music-in-Motion
-UTRA Hacks 2018 
+## UTRA Hacks 2018 
 
-Top: RAW Sound Signal (Pyaudio --> Laptop Mic)
+**Top:** RAW Sound Signal from Mic.
 
-Below: Spectrum Analyzer (RAW --> Fourier Trans.)
+**Below:** Frequency/Vol. Plot (Fourier Transform of Signal)
 
 ![Audio Signal -> Fourier Transform -> Spectrum](spec3.png)
