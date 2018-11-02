@@ -2,6 +2,6 @@
 
 **Top:** RAW Sound Signal from Mic.
 
-**Below:** Frequency/Vol. Plot (Fourier Transform of Signal)
+**Below:** Frequency/Vol. Spectrum (Fourier Transform of Signal)
 
 ![Audio Signal -> Fourier Transform -> Spectrum](spec3.png)
