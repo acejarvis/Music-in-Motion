@@ -4,7 +4,7 @@
 #define upperLimit 50
 #define lowerLimit 6
 
-int echoPin[3];// receive pins of ultrasonic sensors
+//int echoPin[3];// receive pins of ultrasonic sensors
 int count_left = 0, count_right = 0, count = 0;// counter for an object passes the sensors
 
 double duration, distance[3];
@@ -14,16 +14,18 @@ void setup() {
   //Serial Port begin
   Serial.begin (9600);
   //Define inputs and outputs
-  pinMode(trigPin, OUTPUT);
-  for(int Pin=9;Pin<=11;Pin++){
-    pinMode(echoPin[Pin], INPUT);
+  for(int trigPin = 0; trigPin <= 2; trigPin++){
+    pinMode(trigPin, OUTPUT);
   }
-  
+  for(int echoPin = 0; echoPin <= 2; echoPin++){
+    pinMode(echoPin, INPUT);
+  }
 }
  
 void loop() {
   // The sensor is triggered by a HIGH pulse of 10 or more microseconds.
   // Give a short LOW pulse beforehand to ensure a clean HIGH pulse:
+  
   digitalWrite(trigPin, LOW);
   delayMicroseconds(5);
   digitalWrite(trigPin, HIGH);
