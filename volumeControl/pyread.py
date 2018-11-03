@@ -17,7 +17,7 @@ def init_serial():
     global ser          #Must be declared in Each Function
     ser = serial.Serial()
     ser.baudrate = 9600
-    ser.port = '/dev/cu.usbmodem145401'   #COM Port Name Start from 0
+    ser.port = '/dev/cu.usbserial-14530'   #COM Port Name Start from 0
     #ser.port = '/dev/ttyUSB0' #If Using Linux
  
     #Specify the TimeOut in seconds, so that SerialPort
