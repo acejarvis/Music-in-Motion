@@ -41,7 +41,7 @@ spotifyObject = spotipy.Spotify(auth=token)
 # Get current device
 devices = spotifyObject.devices()
 print(json.dumps(devices, sort_keys=True, indent=4))
-deviceID = devices['devices'][0]['id']
+deviceID = devices['devices'][1]['id']
 
 # Current track information
 track = spotifyObject.current_user_playing_track()
