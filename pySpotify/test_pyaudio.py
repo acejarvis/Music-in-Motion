@@ -1,5 +1,14 @@
 #verification of python - spotify script 
 # Erase cache and prompt for user permission
+import os
+import sys
+import json
+import spotipy
+import webbrowser
+import spotipy.util as util
+from json.decoder import JSONDecodeError
+
+
 username = 'zack_manesiotis'
 scope = 'user-read-private user-read-playback-state user-modify-playback-state'
 client_id = '5a697a22138740e8ab30ce2ef839f3d8'
