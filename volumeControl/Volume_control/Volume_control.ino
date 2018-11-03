@@ -12,7 +12,7 @@
 int count_left = 0, count_right = 0, count = 0;// counter for an object passes the sensors
 
 int volume, volume_memory = 0;
-float dist_1,dist_2,Dist_3;
+float dist_1,dist_2,dist_3;
 
 float getDist(int trigPin, int echoPin)
 {
@@ -29,7 +29,7 @@ float getDist(int trigPin, int echoPin)
   // duration is the time (in microseconds) from the sending
   // of the ping to the reception of its echo off of an object.
   
-    duration = pulseIn(echo, HIGH);
+    duration = pulseIn(echoPin, HIGH);
     // Convert the time into a distance
     dist = (duration/2) / 29.1;
     //if (dist>60) dist = 60;
@@ -56,7 +56,7 @@ void loop() {
 
   //get volume converted from distance
   if(dist_1 >= lowerLimit - 0.2 && dist_1 <= upperLimit){ 
-    volume = (distance-5.8)*100/(upperLimit - lowerLimit);
+    volume = (dist_1-5.8)*100/(upperLimit - lowerLimit);
     Serial.println(volume);
   }
   //range detect for the other two sensors
