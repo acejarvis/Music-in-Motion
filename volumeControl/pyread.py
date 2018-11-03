@@ -7,7 +7,7 @@ import time
 
 
 #read data from arduino
-#ser = serial.Serial("/dev/cu.usbmodem145401", 9600) #serial ports setting on Mac
+# ser = serial.Serial("/dev/cu.usbmodem145301", 9600) #serial ports setting on Mac
 #ser = serial.Serial("COM3", 9600, timeout = 0.5) #serial ports setting on Windows
 
 ser = 0
@@ -17,27 +17,27 @@ def init_serial():
     global ser          #Must be declared in Each Function
     ser = serial.Serial()
     ser.baudrate = 9600
-    ser.port = '/dev/cu.usbmodem145301'   #COM Port Name Start from 0
+    ser.port = '/dev/cu.usbmodem145401'   #COM Port Name Start from 0
     #ser.port = '/dev/ttyUSB0' #If Using Linux
-
+ 
     #Specify the TimeOut in seconds, so that SerialPort
     #Doesn't hangs
-    ser.timeout = 10
+    ser.timeout = 1
     ser.open()          #Opens SerialPort
 
     # print port open or closed
    
-#Function Ends Here
+# #Function Ends Here
 
 init_serial()
-
+   
 vol = OSAX()
-
+ 
 while True:
     incoming = ser.readline()
     
-    print (int(incoming.decode('utf-8'))) # print the current volume
-    volume = float(int(incoming.decode('utf-8'))/103*7) # convert the percentage to osax volume scale
+    #print (int(incoming.decode('utf-8'))) # print the current volume
+    volume = float(int(incoming.decode('utf-8'))/103*7)      
     vol.set_volume(volume) #system volume control
 
 
