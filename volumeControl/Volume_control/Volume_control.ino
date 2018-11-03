@@ -1,10 +1,10 @@
 
-#define trig_1 0//output pins of ultrasonic sensors
-#define echo_1 1
-#define trig_2 2
-#define echo_2 3
-#define trig_3 4
-#define echo_3 5
+#define trig_1 2//output pins of ultrasonic sensors
+#define echo_1 3
+#define trig_2 4
+#define echo_2 5
+#define trig_3 6
+#define echo_3 7
 // define the detect-range
 #define upperLimit 27
 #define lowerLimit 6
