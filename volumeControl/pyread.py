@@ -17,7 +17,7 @@ def init_serial():
     global ser          #Must be declared in Each Function
     ser = serial.Serial()
     ser.baudrate = 9600
-    ser.port = '/dev/cu.usbserial-14530'   #COM Port Name Start from 0
+    ser.port = '/dev/cu.usbserial-14540'   #COM Port Name Start from 0
     #ser.port = '/dev/ttyUSB0' #If Using Linux
  
     #Specify the TimeOut in seconds, so that SerialPort
@@ -34,42 +34,42 @@ def init_serial():
 init_serial()
    
 vol = OSAX()
- 
-while True:
-    incoming = ser.readline()
-    
-    #print (int(incoming.decode('utf-8'))) # print the current volume
-    volume = float(int(incoming.decode('utf-8'))/103*7)      
-    vol.set_volume(volume) #system volume control
-
-
-
-
 
 buttonStateFlag = True
 playStateFlag = True 
+counter_sum = 0
+counter_left = 0
+counter_right = 0
 
 while True:
-    data = ser.readline()
+
+    incoming = ser.readline()
+    data = int(incoming.decode('utf-8'))
     #Self-locking Push Switch for Play/Pause 
-    counter_left = 0 
-    counter_right = 0 
-    counter_sum = 0 
 #convert to int
+
+
     if data < 120:
-        print(data)
-    elif data ==202:
-        counter_sum++
+        volume = float(data/103*7)      
+        vol.set_volume(data) #system volume control
+
+    if data ==202:
+        counter_sum +=1
     elif data == 203:
-        counter_left++
+        counter_left +=1
     elif data == 302:
-        counter_right++
+        counter_right +=1
+    else: 
+        counter_left = 0
+        counter_right = 0
+        counter_sum = 0
     
     # condition
-    if counter_left >= 10 and counter_left <= 20 or counter_right >= 10 and counter_right <= 20 
+    if counter_left >= 10 and counter_left <= 20 or counter_right >= 10 and counter_right <= 20:
         if counter_left > counter_right:
             print("play previous")
-        else print("play next")
+        else: 
+            print("play next")
 
     if counter_sum > 20:
         buttonStateFlag = True
@@ -80,6 +80,7 @@ while True:
             print("Play") #need api calling
         else:
             print("Pause") #need api calling
+        
         buttonStateFlag = False
     
     
