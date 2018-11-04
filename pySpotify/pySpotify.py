@@ -1,10 +1,12 @@
 
 #  pySpotify
 #
-#  Created by Jarvis Wang on 2018-11-02.
+#  Created by Jarvis Wang on 2018-11-03.
 #  Copyright © 2018 Jarvis Wang. All rights reserved.
 # 
 
+
+#UTRA Hacks 2018
 import os
 import sys
 import json
@@ -41,14 +43,14 @@ spotifyObject = spotipy.Spotify(auth=token)
 # Get current device
 devices = spotifyObject.devices()
 print(json.dumps(devices, sort_keys=True, indent=4))
-deviceID = devices['devices'][1]['id'] #where change the deviceID
+deviceID = devices['devices'][0]['id'] #where change the deviceID
 
 # Current track information
 track = spotifyObject.current_user_playing_track()
 print(json.dumps(track, sort_keys=True, indent=4))
 print()
 
-artist = track['item']['artists'][0]['name']
+artist = track['artists']['items'][0]
 track = track['item']['name']
  
 if artist != "":
@@ -68,13 +70,13 @@ while True:
     print(">>> Welcome to Spotipy " + displayName + "!")
     print(">>> You have " + str(followers) + " followers.")
     print()
-    print("0 - Search for an artist")
-    print("1 - exit")
+    print("1 - Search for an artist")
+    print("0 - exit")
     print()
     choice = input("Your choice: ")
 
     # Search for the artist
-    if choice == "0":
+    if choice == "1":
         print()
         searchQuery = input("Artist's Name:")
         print()
@@ -128,5 +130,5 @@ while True:
             webbrowser.open(trackArt[int(songSelection)])
 
 
-    if choice == "1":
+    if choice == "0":
         break
