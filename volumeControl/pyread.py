@@ -17,7 +17,7 @@ def init_serial():
     global ser          #Must be declared in Each Function
     ser = serial.Serial()
     ser.baudrate = 9600
-    ser.port = '/dev/cu.usbserial-14530'   #COM Port Name Start from 0
+    ser.port = '/dev/cu.usbserial-14540'   #COM Port Name Start from 0
     #ser.port = '/dev/ttyUSB0' #If Using Linux
  
     #Specify the TimeOut in seconds, so that SerialPort
@@ -36,7 +36,7 @@ vol = OSAX()
 while True:
     incoming = ser.readline()
     
-    #print (int(incoming.decode('utf-8'))) # print the current volume
+    print (int(incoming.decode('utf-8'))) # print the current volume
     volume = float(int(incoming.decode('utf-8'))/103*7)      
     vol.set_volume(volume) #system volume control
 
