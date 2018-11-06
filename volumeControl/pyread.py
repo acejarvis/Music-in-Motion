@@ -35,52 +35,55 @@ init_serial()
    
 vol = OSAX()
 
-buttonStateFlag = True
-playStateFlag = True 
-counter_sum = 0
-counter_left = 0
-counter_right = 0
+# buttonStateFlag = True
+# playStateFlag = True 
+# counter_sum = 0
+# counter_left = 0
+# counter_right = 0
 
 while True:
 
     incoming = ser.readline()
     data = int(incoming.decode('utf-8'))
+    print(data)
     #Self-locking Push Switch for Play/Pause 
 #convert to int
+    volume = float(data/103*7)      
+    vol.set_volume(volume) #system volume control
 
 
-    if data < 120:
-        volume = float(data/103*7)      
-        vol.set_volume(data) #system volume control
+#     if data < 120:
+#         volume = float(data/103*7)      
+#         vol.set_volume(data) #system volume control
 
-    if data ==202:
-        counter_sum +=1
-    elif data == 203:
-        counter_left +=1
-    elif data == 302:
-        counter_right +=1
-    else: 
-        counter_left = 0
-        counter_right = 0
-        counter_sum = 0
+#     if data ==202:
+#         counter_sum +=1
+#     elif data == 203:
+#         counter_left +=1
+#     elif data == 302:
+#         counter_right +=1
+#     else: 
+#         counter_left = 0
+#         counter_right = 0
+#         counter_sum = 0
     
-    # condition
-    if counter_left >= 10 and counter_left <= 20 or counter_right >= 10 and counter_right <= 20:
-        if counter_left > counter_right:
-            print("play previous")
-        else: 
-            print("play next")
+#     # condition
+#     if counter_left >= 10 and counter_left <= 20 or counter_right >= 10 and counter_right <= 20:
+#         if counter_left > counter_right:
+#             print("play previous")
+#         else: 
+#             print("play next")
 
-    if counter_sum > 20:
-        buttonStateFlag = True
+#     if counter_sum > 20:
+#         buttonStateFlag = True
 
-    if buttonStateFlag == True: 
-        playStateFlag = not playStateFlag
-        if playStateFlag:
-            print("Play") #need api calling
-        else:
-            print("Pause") #need api calling
+#     if buttonStateFlag == True: 
+#         playStateFlag = not playStateFlag
+#         if playStateFlag:
+#             print("Play") #need api calling
+#         else:
+#             print("Pause") #need api calling
         
-        buttonStateFlag = False
+#         buttonStateFlag = False
     
     
