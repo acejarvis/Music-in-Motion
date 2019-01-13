@@ -1,71 +1,49 @@
 
-#define trigPin 12 //output pins of ultrasonic sensors
+// define ports
+#define pin_1 A0
+#define pin_2 A1
+#define pin_3 A2
 
-#define upperLimit 50
-#define lowerLimit 6
+// define the detect-range
+#define upperLimit 75
+#define lowerLimit 0
 
-//int echoPin[3];// receive pins of ultrasonic sensors
-int count_left = 0, count_right = 0, count = 0;// counter for an object passes the sensors
+int volume;
+int dist_1,dist_2,dist_3;
 
-double duration, distance[3];
-int play, volume;
 
 void setup() {
   //Serial Port begin
   Serial.begin (9600);
   //Define inputs and outputs
-  for(int trigPin = 0; trigPin <= 2; trigPin++){
-    pinMode(trigPin, OUTPUT);
-  }
-  for(int echoPin = 0; echoPin <= 2; echoPin++){
-    pinMode(echoPin, INPUT);
-  }
+  pinMode(pin_1, INPUT);
+  pinMode(pin_2, INPUT);
+  pinMode(pin_3, INPUT);
 }
  
 void loop() {
-  // The sensor is triggered by a HIGH pulse of 10 or more microseconds.
-  // Give a short LOW pulse beforehand to ensure a clean HIGH pulse:
-  
-  digitalWrite(trigPin, LOW);
-  delayMicroseconds(5);
-  digitalWrite(trigPin, HIGH);
-  delayMicroseconds(10);
-  digitalWrite(trigPin, LOW);
- 
-  // Read the signal from the sensor: a HIGH pulse whose
-  // duration is the time (in microseconds) from the sending
-  // of the ping to the reception of its echo off of an object.
-  for(int i=0; i<=2; i++){
-    duration = pulseIn(echoPin[i+9], HIGH);
-    // Convert the time into a distance
-    distance[i] = (duration/2) / 29.1;     // Divide by 29.1 or multiply by 0.0343
-  }
+  //get distance
+  dist_1 = 2.6851 *exp(0.0035*analogRead(pin_1))-10;
+  dist_2 = 2.6851 *exp(0.0035*analogRead(pin_2))-10;
+  dist_3 = 2.6851 *exp(0.0035*analogRead(pin_3))-10;
+
   //get volume converted from distance
-  if(distance[0]<50 && distance[0]>6){ 
-    volume = (distance[0]-5)*100/(upperLimit - lowerLimit);
+  if(dist_1 >= lowerLimit && dist_1 <= upperLimit){ 
+    volume = (dist_1- lowerLimit)*100/(upperLimit - lowerLimit); // convert distance to volume scale
+    Serial.println(volume);
   }
-  
-  //left/right control
-  if(distance[1]<40 || distance[2]<40){
-    count++;
-    if(distance[1]<40) count_left++;
-    if(distance[2]<40) count_right++;
-  }
+  //range detect for the other two sensors
   else{
-    count = 0;
-    count_left = 0;
-    count_right = 0;
+    if(dist_2 >= lowerLimit && dist_2 <= upperLimit){ 
+      Serial.print('2'); // hand pass
+    }
+    else Serial.print('3'); // no hand pass
+    Serial.print('0');
+    if(dist_3 >= lowerLimit && dist_3 <= upperLimit){
+      Serial.println('2'); // hand pass
+    }
+    else Serial.println('3'); // no hand pass
   }
   
-  //play next/previous
-  if(count > 5 && count < 50){
-    if(count_left <= count_right) play= 200;//play previous
-    else play = 300;//play next
-  }
-  
-  // play/pause
-  else if(count >=50) play = 400;
-  else play = volume;
-  Serial.println(play);
   delay(10);
 }

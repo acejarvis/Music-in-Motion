@@ -1,12 +1,5 @@
-
-#  pySpotify
-#
-#  Created by Jarvis Wang on 2018-11-03.
-#  Copyright © 2018 Jarvis Wang. All rights reserved.
-# 
-
-
-#UTRA Hacks 2018
+#verification of python - spotify script 
+# Erase cache and prompt for user permission
 import os
 import sys
 import json
@@ -14,15 +7,11 @@ import spotipy
 import webbrowser
 import spotipy.util as util
 from json.decoder import JSONDecodeError
+import time
 
-# Get the username
-# username = sys.argv[1]
 
-# User ID: acejarvis
-
-# Erase cache and prompt for user permission
 username = 'zack_manesiotis'
-scope = 'user-read-private user-read-playback-state user-modify-playback-state'
+scope = 'user-read-private user-read-playback-state user-modify-playback-state playlist-modify-private playlist-modify-private'
 client_id = '5a697a22138740e8ab30ce2ef839f3d8'
 client_secret = '88600ca366214c25842d44d0a21af53d'
 redirect_uri = 'http://apple.com/'
@@ -43,21 +32,20 @@ spotifyObject = spotipy.Spotify(auth=token)
 # Get current device
 devices = spotifyObject.devices()
 print(json.dumps(devices, sort_keys=True, indent=4))
-deviceID = devices['devices'][0]['id'] #where change the deviceID
+deviceID = devices['devices'][0]['id']
+
+
 
 # Current track information
 track = spotifyObject.current_user_playing_track()
 print(json.dumps(track, sort_keys=True, indent=4))
 print()
 
-artist = track['artists']['items'][0]
-track = track['item']['name']
+# artist = track['artists']['items'][0]
+# track = track['item']['name']
  
-if artist != "":
-    print("Currently playing " + artist + " - " + track)
-
-
-
+# if artist != "":
+#     print("Currently playing " + artist + " - " + track)
 
 
 # User information
@@ -70,15 +58,15 @@ while True:
     print(">>> Welcome to Spotipy " + displayName + "!")
     print(">>> You have " + str(followers) + " followers.")
     print()
-    print("1 - Search for an artist")
-    print("0 - exit")
+    print("1 - Search for a song")
+    print("0 - Exit")
     print()
     choice = input("Your choice: ")
 
     # Search for the artist
     if choice == "1":
         print()
-        searchQuery = input("Artist's Name:")
+        searchQuery = input("Artist's Name: ")
         print()
 
         # Get search results
@@ -87,10 +75,7 @@ while True:
 
         artist = searchResults['artists']['items'][0]
         print(artist['name'])
-        print(str(artist['followers']['total']) + " followers")
-        print(artist['genres'][0])
-        print()
-        webbrowser.open(artist['images'][0]['url'])
+        #webbrowser.open(song['images'][0]['url'])
         artistID = artist['id']
 
 
@@ -127,8 +112,41 @@ while True:
             trackSelectionList = []
             trackSelectionList.append(trackURIs[int(songSelection)])
             spotifyObject.start_playback(deviceID, None, trackSelectionList) # added
-            webbrowser.open(trackArt[int(songSelection)])
+            webbrowser.open(trackArt[int(songSelection)]) 
+
+            List = [10, 20, 30, 40, 50, 60, 70, 80, 90, 100, 203, 202, 203, 202, 202, 202, 302, 202, 302, 202]
+            #volume = spotifyObject.volume(0)
+            volume = spotifyObject.volume(0)
+            while True:
+                for i in range(len(List)): 
+                    if (0 <= List[i] <= 100):
+                        #it is from the volume sensor
+                        volume = spotifyObject.volume(List[i])
+                        print("Changing the volume")
+                        time.sleep(1)
+                    elif List[i] == 202:
+                        #it is from gesture control 
+                        if List[i-1] == 203: 
+                            #hand swiped from left to right, so skip right
+                            spotifyObject.pause_playback(deviceID)
+                            print("pause")
+                           # webbrowser.open(trackArt[int(songSelection)])
+                            time.sleep(2)
+                        if List[i-1] == 302: 
+                            spotifyObject.start_playback(deviceID)
+                            print("play")
+                            #webbrowser.open(trackArt[int(songSelection)])
+                            time.sleep(2)
+                        
+                        
+
+                    else:  
+                        #do nothing 
+                        print("did not receive data")
+                break; 
 
 
-    if choice == "0":
-        break
+            if choice == "0":
+                break
+
+
