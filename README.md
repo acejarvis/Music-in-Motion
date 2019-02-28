@@ -1,4 +1,4 @@
 # Music-in-Motion
-UTRA Hacks 2018 
+U of T Hardware Hacks 2018 
 
-A gesture-controlled music player with RGB 
+A gesture-controlled music player which integrates ultrasonic and IR sensors with Spotify's API
