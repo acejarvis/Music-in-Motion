@@ -12,8 +12,8 @@ import time
 
 username = 'zack_manesiotis'
 scope = 'user-read-private user-read-playback-state user-modify-playback-state playlist-modify-private playlist-modify-private'
-client_id = '5a697a22138740e8ab30ce2ef839f3d8'
-client_secret = '88600ca366214c25842d44d0a21af53d'
+client_id = CLIENT_ID
+client_secret = CLIENT_SECRET
 redirect_uri = 'http://apple.com/'
 
 
